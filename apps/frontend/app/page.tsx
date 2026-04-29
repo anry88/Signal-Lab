@@ -84,11 +84,15 @@ export default function Home() {
             <form
               className="space-y-3"
               onSubmit={form.handleSubmit(async (values) => {
-                await mutation.mutateAsync({
-                  type: values.type,
-                  name: values.name?.trim() || undefined,
-                });
-                form.reset({ ...values, name: "" });
+                try {
+                  await mutation.mutateAsync({
+                    type: values.type,
+                    name: values.name?.trim() || undefined,
+                  });
+                  form.reset({ ...values, name: "" });
+                } catch {
+                  // Expected error scenarios are shown through the mutation onError toast.
+                }
               })}
             >
               <div className="space-y-1">

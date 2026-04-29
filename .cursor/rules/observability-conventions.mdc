@@ -19,10 +19,15 @@ When backend behavior changes, keep observability coverage aligned with existing
 ## Logging format
 
 - Scenario logs should stay JSON and include:
+  - `timestamp`
+  - `level`
+  - `message`
+  - `context`
   - `scenarioType`
   - `scenarioId`
   - `duration`
   - `error` (string or `null`)
+- Use `message`, not `msg`, so Loki/Grafana queries match the PRD format.
 - Error paths should log with `level: "error"` and explicit message text.
 
 ## Sentry

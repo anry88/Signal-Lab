@@ -25,6 +25,7 @@ Use this skill to make a backend endpoint observability-ready in this repository
 2. **Structured logs**
    - Emit JSON logs for success and failure paths.
    - Include these keys for scenario flows:
+     - `timestamp`, `level`, `message`, `context`.
      - `scenarioType`, `scenarioId`, `duration`, `error`.
 
 3. **Sentry**
@@ -38,5 +39,5 @@ Use this skill to make a backend endpoint observability-ready in this repository
 5. **Verification commands**
    - `curl http://localhost:3001/metrics`
    - `curl http://localhost:3100/loki/api/v1/labels`
-   - `curl "http://localhost:3100/loki/api/v1/query_range?query={app=\"signal-lab\"}&limit=5"`
+   - `curl -G "http://localhost:3100/loki/api/v1/query_range" --data-urlencode 'query={app="signal-lab"} |= "scenarioType"' --data-urlencode 'limit=5'`
    - `curl http://localhost:3000/grafana/api/health`

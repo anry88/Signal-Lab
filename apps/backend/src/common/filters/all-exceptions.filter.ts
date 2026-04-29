@@ -49,17 +49,22 @@ export class AllExceptionsFilter implements ExceptionFilter {
       message = exception.message || message;
     }
 
-    // Keep logs machine-readable; Loki/Promtail can be added in later phases.
-    console.error(
-      JSON.stringify({
-        level: status >= HttpStatus.INTERNAL_SERVER_ERROR ? 'error' : 'warn',
-        msg: 'request failed',
-        path: request.url,
-        method: request.method,
-        statusCode: status,
-        message,
-      }),
-    );
+    const logLine = JSON.stringify({
+      timestamp: new Date().toISOString(),
+      level: status >= HttpStatus.INTERNAL_SERVER_ERROR ? 'error' : 'warn',
+      message,
+      context: 'AllExceptionsFilter',
+      event: 'request failed',
+      path: request.url,
+      method: request.method,
+      statusCode: status,
+    });
+
+    if (status >= HttpStatus.INTERNAL_SERVER_ERROR) {
+      console.error(logLine);
+    } else {
+      console.warn(logLine);
+    }
 
     const payload = customPayload ?? {
       statusCode: status,

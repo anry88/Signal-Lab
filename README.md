@@ -137,13 +137,13 @@ Optional query check:
 
 ```bash
 curl -G "http://localhost:3100/loki/api/v1/query_range" \
-  --data-urlencode 'query={app="signal-lab"}' \
+  --data-urlencode 'query={app="signal-lab"} |= "scenarioType"' \
   --data-urlencode 'limit=5'
 ```
 
 Expected observation:
 
-- Recent backend log lines in JSON format with fields like `scenarioType`, `scenarioId`, `duration`, `error`.
+- Recent backend log lines in JSON format with fields like `timestamp`, `message`, `context`, `scenarioType`, `scenarioId`, `duration`, `error`.
 
 ### 7) Verify Sentry capture
 

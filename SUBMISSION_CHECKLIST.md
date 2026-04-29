@@ -56,7 +56,7 @@ docker compose down --remove-orphans
 |--------|-------------------|--------------------------|
 | Prometheus metric | Запустить `success` и `system_error` из UI или через `POST /api/scenarios/run` | `http://localhost:3001/metrics`; проверить `scenario_runs_total`, `scenario_run_duration_seconds`, `http_requests_total` |
 | Grafana dashboard | После 2-3 scenario runs открыть Grafana | `http://localhost:3000/grafana`; dashboard `Signal Lab Overview`, панели должны быть не пустыми |
-| Loki log | Запустить `system_error` или `validation_error` | `http://localhost:3100/loki/api/v1/labels` и query `{app="signal-lab"}` |
+| Loki log | Запустить `system_error` или `validation_error` | `http://localhost:3100/loki/api/v1/labels` и query `{app="signal-lab"} |= "scenarioType"` |
 | Sentry exception | Указать реальный `SENTRY_DSN`, затем запустить `system_error` | Sentry event с сообщением `Scenario forced an internal server error`, tags/extras со scenario context |
 
 Важно по Sentry: локальный `docker-compose.yml` не поднимает Sentry server. В приложении есть `@sentry/node` SDK, который отправляет errors во внешний Sentry project, если задан `SENTRY_DSN`. Cursor Sentry plugin тоже не является локальным Sentry instance; он нужен для workflow/triage через Cursor.

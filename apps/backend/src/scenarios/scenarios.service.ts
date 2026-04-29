@@ -41,6 +41,42 @@ export class ScenariosService {
     });
   }
 
+  private logScenario(
+    level: 'info' | 'warn' | 'error',
+    message: string,
+    params: {
+      scenarioType: string;
+      scenarioId: string;
+      duration: number;
+      error: string | null;
+      signal?: number;
+    },
+  ) {
+    const line = JSON.stringify({
+      timestamp: new Date().toISOString(),
+      level,
+      message,
+      context: 'ScenariosService',
+      scenarioType: params.scenarioType,
+      scenarioId: params.scenarioId,
+      duration: params.duration,
+      error: params.error,
+      signal: params.signal,
+    });
+
+    if (level === 'error') {
+      console.error(line);
+      return;
+    }
+
+    if (level === 'warn') {
+      console.warn(line);
+      return;
+    }
+
+    console.log(line);
+  }
+
   async runScenario(dto: RunScenarioDto) {
     const startedAt = Date.now();
     const baseMetadata = dto.name
@@ -63,16 +99,12 @@ export class ScenariosService {
         metadata: baseMetadata,
       });
 
-      console.warn(
-        JSON.stringify({
-          level: 'warn',
-          msg: message,
-          scenarioType: dto.type,
-          scenarioId: run.id,
-          duration,
-          error: message,
-        }),
-      );
+      this.logScenario('warn', message, {
+        scenarioType: dto.type,
+        scenarioId: run.id,
+        duration,
+        error: message,
+      });
 
       this.metrics.scenarioRunsTotal.inc({ type: dto.type, status: 'failed' });
       this.metrics.scenarioRunDurationSeconds.observe(
@@ -94,16 +126,12 @@ export class ScenariosService {
         metadata: baseMetadata,
       });
 
-      console.error(
-        JSON.stringify({
-          level: 'error',
-          msg: message,
-          scenarioType: dto.type,
-          scenarioId: run.id,
-          duration,
-          error: message,
-        }),
-      );
+      this.logScenario('error', message, {
+        scenarioType: dto.type,
+        scenarioId: run.id,
+        duration,
+        error: message,
+      });
 
       Sentry.captureException(new Error(message), {
         tags: {
@@ -136,17 +164,13 @@ export class ScenariosService {
         },
       });
 
-      console.warn(
-        JSON.stringify({
-          level: 'warn',
-          msg: "I'm a teapot",
-          scenarioType: dto.type,
-          scenarioId: run.id,
-          duration,
-          error: "I'm a teapot",
-          signal: 42,
-        }),
-      );
+      this.logScenario('warn', "I'm a teapot", {
+        scenarioType: dto.type,
+        scenarioId: run.id,
+        duration,
+        error: "I'm a teapot",
+        signal: 42,
+      });
 
       this.metrics.scenarioRunsTotal.inc({ type: dto.type, status: 'teapot' });
       this.metrics.scenarioRunDurationSeconds.observe(
@@ -168,18 +192,17 @@ export class ScenariosService {
       metadata: baseMetadata,
     });
 
-    console.log(
-      JSON.stringify({
-        level: dto.type === 'slow_request' ? 'warn' : 'info',
-        msg:
-          dto.type === 'slow_request'
-            ? 'scenario run completed slowly'
-            : 'scenario run completed',
+    this.logScenario(
+      dto.type === 'slow_request' ? 'warn' : 'info',
+      dto.type === 'slow_request'
+        ? 'scenario run completed slowly'
+        : 'scenario run completed',
+      {
         scenarioType: dto.type,
         scenarioId: run.id,
         duration,
         error: null,
-      }),
+      },
     );
 
     this.metrics.scenarioRunsTotal.inc({ type: dto.type, status: 'completed' });

@@ -146,7 +146,7 @@
       },
       "targets": [
         {
-          "expr": "{app=\"signal-lab\"}",
+          "expr": "{app=\"signal-lab\"} |= \"scenarioType\"",
           "refId": "A"
         }
       ],
