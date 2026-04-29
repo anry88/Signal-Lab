@@ -34,9 +34,19 @@ Optional readiness check:
 docker compose ps
 ```
 
+Cold-start readiness check (recommended on clean machines):
+
+```bash
+for i in {1..30}; do
+  curl -fsS http://localhost:3001/api/health && break
+  sleep 2
+done
+```
+
 Expected observation:
 
 - Services are up: `postgres`, `backend`, `frontend`, `prometheus`, `loki`, `promtail`, `grafana`.
+- First startup can take 1-3 minutes while dependencies install and migrations run.
 
 ### 2) Verify backend/API quickly
 

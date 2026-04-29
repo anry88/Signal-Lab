@@ -121,7 +121,7 @@ Marketplace skills подключены через Cursor plugins. Они мог
 | 1 | `nextjs` через Vercel plugin | Next.js App Router conventions |
 | 2 | `shadcn` через Vercel plugin | shadcn/ui + Tailwind component composition |
 | 3 | `react-best-practices` через Vercel plugin | React/TSX quality review |
-| 4 | `agent-browser-verify` через Vercel plugin | Visual frontend verification |
+| 4 | `verification` через Vercel plugin | Visual frontend verification |
 | 5 | `prisma-cli-migrate-deploy` через Prisma plugin | Prisma migration command guidance |
 | 6 | `prisma-client-api-transactions` через Prisma plugin | Prisma transaction patterns |
 | 7 | `sentry-nestjs-sdk` через Sentry plugin | Sentry SDK setup for NestJS |

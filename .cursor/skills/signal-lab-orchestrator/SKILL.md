@@ -64,9 +64,9 @@ Use project skills for repo-specific work:
 
 Use marketplace skills for generic support:
 
-- Vercel plugin skills: `nextjs`, `shadcn`, `react-best-practices`, `agent-browser-verify`.
+- Vercel plugin skills: `nextjs`, `shadcn`, `react-best-practices`, `verification`.
 - Prisma plugin skills/rules: `prisma-cli-migrate-deploy`, `prisma-client-api-transactions`, `migration-best-practices`, `schema-conventions`.
-- Sentry plugin skills: `sentry-nestjs-sdk`, `sentry-setup-logging`, `sentry-setup-metrics`.
+- Sentry plugin skills: `sentry-nestjs-sdk`, `sentry-workflow`, `sentry-feature-setup`.
 
 If a generic PRD example skill name is unavailable in Cursor Marketplace, do not invent it. Use the connected marketplace skill closest to the role and keep Signal Lab-specific details in project skills/rules.
 

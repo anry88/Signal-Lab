@@ -55,7 +55,7 @@ Use these skills:
 3. `react-best-practices`
    - React/TSX review after component edits: hooks usage, accessibility, performance, and TypeScript patterns.
 
-4. `agent-browser-verify`
+4. `verification`
    - Visual verification for the running frontend so the evaluator UI is checked, not only compiled.
 
 ### Prisma
@@ -96,11 +96,11 @@ Use these skills:
 7. `sentry-nestjs-sdk`
    - Sentry SDK setup for NestJS error capture.
 
-8. `sentry-setup-logging`
-   - Sentry logging integration guidance when backend logging behavior changes.
+8. `sentry-workflow` / `sentry-fix-issues`
+   - Sentry-guided issue triage and production error resolution workflow.
 
-9. `sentry-setup-metrics`
-   - Sentry metrics/performance guidance. Prometheus remains the required primary metrics path for this assignment.
+9. `sentry-create-alert` / `sentry-feature-setup`
+   - Configure alerts and advanced Sentry features (AI monitoring, workflows).
 
 ## Why Not Use the PRD Example Names Literally
 
