@@ -8,7 +8,7 @@
 
 - **URL**: `https://github.com/anry88/Signal-Lab`
 - **Ветка**: `main`
-- **Время работы** (приблизительно): `8-10` часов
+- **Время работы** (приблизительно): `8` часов
 
 ---
 
@@ -128,7 +128,7 @@ Marketplace skills подключены через Cursor plugins. Они мог
 | 8 | `sentry-workflow` / `sentry-fix-issues` через Sentry plugin | Sentry-guided issue triage/fix workflow |
 | 9 | `sentry-create-alert` / `sentry-feature-setup` через Sentry plugin | Настройка alerts и дополнительных Sentry features |
 
-**Что закрыли custom skills, чего нет в marketplace:** Signal Lab-specific scenario types, exact metric names/labels, JSON log fields, `/grafana` subpath, Loki query shape, final demo walkthrough, PRD orchestrator context/resume workflow.
+**Что закрыли custom skills, чего нет в marketplace:** правила конкретно для Signal Lab: типы сценариев, точные имена metrics и labels, JSON log fields, `/grafana` subpath, Loki query, финальная demo-проверка, `context.json` и resume workflow для orchestrator.
 
 ---
 
@@ -138,10 +138,10 @@ Marketplace skills подключены через Cursor plugins. Они мог
 - **Путь к context file** (пример): `.execution/<timestamp>/context.json`
 - **Сколько фаз**: `7`
 - **Фазы**: `analysis`, `codebase`, `planning`, `decomposition`, `implementation`, `review`, `report`
-- **Какие задачи для fast model**: PRD analysis, codebase scan, DTO/UI/metric/log/doc tasks низкой сложности, readonly review, final report
-- **Какие задачи для default model**: planning, decomposition, cross-system integration decisions, сложный review
-- **Поддерживает resume**: да; повторный запуск читает `context.json` и не должен перевыполнять completed phases
-- **Связь с другими skills**: backend -> `nest-endpoint-with-observability`, frontend -> `shadcn-rhf-form`, observability -> `signal-lab-observability`, final verification -> `signal-lab-demo-verifier`
+- **Какие задачи для fast model**: анализ PRD, обзор codebase, простые DTO/UI/metrics/logs/docs задачи, readonly review, итоговый отчёт
+- **Какие задачи для default model**: планирование, декомпозиция, решения на стыке нескольких систем, сложный review
+- **Поддерживает resume**: да; повторный запуск читает `context.json` и не должен перевыполнять завершённые фазы
+- **Связь с другими skills**: backend -> `nest-endpoint-with-observability`, frontend -> `shadcn-rhf-form`, observability -> `signal-lab-observability`, финальная проверка -> `signal-lab-demo-verifier`
 
 ---
 
@@ -151,7 +151,7 @@ Marketplace skills подключены через Cursor plugins. Они мог
 - [x] Grafana dashboard с данными: `screenshots/grafana-signal-lab-dashboard.png`
 - [x] Loki logs: `screenshots/grafana-loki-explore-logs.png`
 - [x] Sentry error: `screenshots/sentry-system-error-event.png`
-- [x] Cursor skills screen с 5 local custom skills: `screenshots/cursor-local-custom-skills.png`
+- [x] Cursor skills screen с 5 локальными custom skills: `screenshots/cursor-local-custom-skills.png`
 - [x] Cursor plugins установлены: Vercel, Prisma, Sentry: `screenshots/cursor-marketplace-plugins.png`
 
 ### Preview
@@ -182,29 +182,29 @@ Cursor marketplace plugins:
 
 ---
 
-## Что не успел и что сделал бы первым при +4 часах
+## Что улучшил бы первым при +4 часах
 
-- Добавил бы screenshots/video walkthrough: UI, Grafana, Loki query, Sentry event.
+- Добавил бы короткое видео walkthrough поверх уже приложенных скриншотов.
 - Добавил бы GitHub Actions smoke check для backend/frontend build и `docker compose config`.
 - Прогнал бы clean-clone verification на отдельной машине или в свежей директории.
 - Улучшил бы dashboard: больше фильтров по `scenarioType`, отдельная panel для `teapot`, annotation для `system_error`.
-- Для production-подобной версии добавил бы real secret management вместо локального `.env`.
+- Для production-подобной версии добавил бы полноценное secret management вместо локального `.env`.
 
 ---
 
 ## Вопросы для защиты
 
 1. **Почему именно такая декомпозиция skills?**
-   Marketplace skills дают общую экспертизу по Next.js/Prisma/Sentry, а custom skills фиксируют Signal Lab-specific контракты: scenario types, metrics, logs, ports, walkthrough.
+   Marketplace skills дают общую экспертизу по Next.js, Prisma и Sentry. Кастомные скиллы фиксируют правила конкретно этого проекта: типы сценариев, названия метрик, формат логов, порты, порядок проверки и требования к наблюдаемости.
 
 2. **Какие задачи подходят для малой модели и почему?**
-   Локальные изменения с чётким шаблоном: DTO, controller method, simple UI component, metric/log wiring, docs update. У них малый blast radius и понятные acceptance checks.
+   Малой модели подходят локальные изменения с понятным шаблоном: DTO, метод контроллер, простой UI компонент, добавление метрик/логов, обновление документации. У таких задач небольшой радиус отклонения и чёткие критерии приемки.
 
 3. **Какие marketplace skills подключил, а какие заменил custom — и почему?**
-   Подключены Vercel, Prisma, Sentry plugin skills. Custom skills не заменяют их, а добавляют project-specific policy: observability contracts, orchestrator, demo verification.
+   Подключены скиллы из Vercel, Prisma и Sentry. Они закрывают общие знания по фреймворкам и инструментам. Кастомные скиллы не заменяют их, а добавляют правила Signal Lab: observability contracts, orchestrator и demo verification.
 
 4. **Какие hooks реально снижают ошибки в повседневной работе?**
-   Secret guard блокирует случайный commit DSN/tokens, endpoint observability guard ловит backend changes без metrics/logs/Sentry markers.
+   Secret guard блокирует случайный коммит DSN, токенов и похожих секретов. Endpoint observability guard предупреждает, если backend endpoint изменён без metrics/logs/Sentry markers.
 
 5. **Как orchestrator экономит контекст по сравнению с одним большим промптом?**
-   Он хранит состояние в `.execution/<timestamp>/context.json`, делит PRD на фазы и атомарные tasks, помечает model route и позволяет resume без повторного чтения всего контекста.
+   Он хранит состояние в `.execution/<timestamp>/context.json`, делит PRD на фазы и небольшие задачи, помечает маршрут модели и позволяет продолжить работу без повторного чтения всего предыдущего контекста.
