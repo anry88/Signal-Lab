@@ -37,9 +37,6 @@ export default function RootLayout({
                   <span className="text-sm font-semibold tracking-tight">
                     Signal Lab
                   </span>
-                  <span className="text-xs text-zinc-500">
-                    Phase 3 UI
-                  </span>
                 </div>
               </div>
             </header>
