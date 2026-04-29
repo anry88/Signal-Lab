@@ -1,0 +1,34 @@
+{
+  "executionId": "YYYY-MM-DD-HH-mm",
+  "prdPath": "prds/002_prd-observability-demo.md",
+  "status": "in_progress",
+  "currentPhase": "analysis",
+  "phases": {
+    "analysis": { "status": "pending", "result": "" },
+    "codebase": { "status": "pending", "result": "" },
+    "planning": { "status": "pending", "result": "" },
+    "decomposition": { "status": "pending", "result": "" },
+    "implementation": {
+      "status": "pending",
+      "completedTasks": 0,
+      "totalTasks": 0
+    },
+    "review": { "status": "pending", "result": "" },
+    "report": { "status": "pending", "result": "" }
+  },
+  "signal": 42,
+  "tasks": [
+    {
+      "id": "task-001",
+      "title": "Add endpoint DTO",
+      "domain": "backend",
+      "complexity": "low",
+      "model": "fast",
+      "skill": "nest-endpoint-with-observability",
+      "status": "pending",
+      "dependsOn": [],
+      "retries": 0
+    }
+  ],
+  "failures": []
+}

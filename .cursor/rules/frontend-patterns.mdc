@@ -1,0 +1,23 @@
+---
+description: Frontend data-flow and UI conventions for Signal Lab
+globs: apps/frontend/**/*.{ts,tsx}
+alwaysApply: false
+---
+
+# Frontend Patterns
+
+Follow the existing Signal Lab UI architecture:
+
+- Use React Hook Form for user input forms.
+- Use TanStack Query for server state:
+  - `useMutation` for run actions
+  - `useQuery` for run history and health-like polling
+- Keep API calls centralized in `apps/frontend/lib/api.ts`.
+- Use shadcn-style components from `apps/frontend/components/ui`.
+- Keep UI compact and operational (no marketing pages).
+
+For scenario UX specifically:
+
+- Form fields: scenario type + optional name.
+- History list should show type/status/duration/timestamp and errors when present.
+- Keep observability links visible and updated with current ports and paths.

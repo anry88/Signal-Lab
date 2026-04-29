@@ -1,0 +1,22 @@
+---
+description: Enforce required Signal Lab stack and ports
+alwaysApply: true
+---
+
+# Signal Lab Stack Constraints
+
+Follow these hard constraints for this repository:
+
+- Frontend stack is fixed: Next.js App Router + Tailwind + shadcn/ui + TanStack Query + React Hook Form.
+- Backend stack is fixed: NestJS + Prisma + PostgreSQL.
+- Observability stack is fixed: Prometheus + Grafana + Loki + Sentry.
+- Do not replace required libraries with alternatives (for example SWR, Redux, TypeORM, MongoDB, Winston-only logging stack).
+
+Use assignment-aligned ports and paths:
+
+- UI: `http://localhost:3000`
+- Backend API: `http://localhost:3001`
+- Loki API: `http://localhost:3100`
+- Grafana via UI subpath: `http://localhost:3000/grafana`
+
+Keep `docker compose up -d` as the single startup path for the full stack.

@@ -1,0 +1,25 @@
+---
+description: API and UI error-handling standards for predictable behavior
+alwaysApply: true
+---
+
+# Error Handling Standards
+
+When adding or changing behavior, keep error responses predictable.
+
+## Backend
+
+- Use typed NestJS exceptions for expected failures (`BadRequestException`, `HttpException`, etc.).
+- Keep unknown failures mapped by the global filter in `apps/backend/src/common/filters/all-exceptions.filter.ts`.
+- Preserve response shape:
+  - `statusCode`
+  - `message`
+  - `timestamp`
+  - `path`
+- If returning custom payloads (example: teapot with `signal: 42`), ensure the filter does not drop custom fields.
+
+## Frontend
+
+- Surface API failures via toast and inline state (no silent failures).
+- Keep loading, error, and empty states explicit for query-based components.
+- Avoid throwing raw JSON blobs into the UI; map to concise user-facing text.

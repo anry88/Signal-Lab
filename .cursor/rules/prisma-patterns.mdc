@@ -1,0 +1,19 @@
+---
+description: Prisma usage patterns for schema and query safety
+globs: "{prisma/**/*.prisma,apps/backend/src/**/*.ts}"
+alwaysApply: false
+---
+
+# Prisma Patterns
+
+Use Prisma as the only data-access layer in this repository.
+
+- Do not introduce other ORMs or raw SQL migrations unless explicitly requested.
+- Keep schema changes in `prisma/schema.prisma` and add a matching migration under `prisma/migrations/`.
+- For new domain writes, use typed Prisma create/update calls in service classes.
+- Keep API payload validation in DTOs; avoid trusting raw input in Prisma calls.
+
+For Scenario domain updates:
+
+- Preserve `ScenarioRun` compatibility (`type`, `status`, `duration`, `error`, `metadata`, `createdAt`).
+- If response contracts depend on run history, update both Prisma select clauses and frontend API types.

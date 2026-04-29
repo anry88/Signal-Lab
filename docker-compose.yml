@@ -1,0 +1,100 @@
+services:
+  postgres:
+    image: postgres:16
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-signal_lab}
+      POSTGRES_USER: ${POSTGRES_USER:-signal}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-signal}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-signal} -d ${POSTGRES_DB:-signal_lab}"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  backend:
+    build:
+      context: .
+      dockerfile: apps/backend/Dockerfile
+    ports:
+      - "3001:3001"
+    environment:
+      PORT: ${BACKEND_PORT:-3001}
+      DATABASE_URL: ${DATABASE_URL:-postgresql://signal:signal@postgres:5432/signal_lab}
+      CORS_ORIGIN: ${CORS_ORIGIN:-http://localhost:3000}
+      SENTRY_DSN: ${SENTRY_DSN:-}
+      SENTRY_ENVIRONMENT: ${SENTRY_ENVIRONMENT:-local}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./apps/backend:/workspace/apps/backend
+      - ./prisma:/workspace/prisma
+      - backend_node_modules:/workspace/apps/backend/node_modules
+    command: sh -c "npm install && npm run prisma:migrate:deploy && npm run start:dev"
+
+  frontend:
+    build:
+      context: .
+      dockerfile: apps/frontend/Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      NEXT_PUBLIC_BACKEND_URL: ${NEXT_PUBLIC_BACKEND_URL:-http://localhost:3001}
+    depends_on:
+      - backend
+      - grafana
+    volumes:
+      - ./apps/frontend:/workspace/apps/frontend
+      - frontend_node_modules:/workspace/apps/frontend/node_modules
+
+  prometheus:
+    image: prom/prometheus:v2.54.1
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+    volumes:
+      - ./observability/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    depends_on:
+      - backend
+
+  loki:
+    image: grafana/loki:3.2.1
+    command: ["-config.file=/etc/loki/loki-config.yml"]
+    ports:
+      - "3100:3100"
+    volumes:
+      - ./observability/loki/loki-config.yml:/etc/loki/loki-config.yml:ro
+      - loki_data:/loki
+
+  promtail:
+    image: grafana/promtail:3.2.1
+    command: ["-config.file=/etc/promtail/promtail-config.yml"]
+    depends_on:
+      - loki
+    volumes:
+      - ./observability/promtail/promtail-config.yml:/etc/promtail/promtail-config.yml:ro
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+
+  grafana:
+    image: grafana/grafana:11.1.4
+    environment:
+      GF_AUTH_ANONYMOUS_ENABLED: "true"
+      GF_AUTH_ANONYMOUS_ORG_ROLE: "Admin"
+      GF_AUTH_DISABLE_LOGIN_FORM: "true"
+      GF_SERVER_ROOT_URL: "%(protocol)s://%(domain)s/grafana"
+      GF_SERVER_SERVE_FROM_SUB_PATH: "true"
+    volumes:
+      - ./observability/grafana/provisioning/datasources:/etc/grafana/provisioning/datasources:ro
+      - ./observability/grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards:ro
+      - ./observability/grafana/dashboards:/var/lib/grafana/dashboards:ro
+      - grafana_data:/var/lib/grafana
+
+volumes:
+  postgres_data:
+  frontend_node_modules:
+  backend_node_modules:
+  loki_data:
+  grafana_data:

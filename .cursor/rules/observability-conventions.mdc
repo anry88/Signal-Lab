@@ -1,0 +1,32 @@
+---
+description: Metric, logging, and Sentry conventions for Signal Lab
+globs: apps/backend/src/**/*.ts
+alwaysApply: false
+---
+
+# Observability Conventions
+
+When backend behavior changes, keep observability coverage aligned with existing conventions in this repo.
+
+## Metrics naming and labels
+
+- Reuse existing metrics in `apps/backend/src/observability/metrics.service.ts`.
+- `scenario_runs_total` labels must stay `{type,status}`.
+- `scenario_run_duration_seconds` labels must stay `{type}`.
+- `http_requests_total` labels must stay `{method,path,status_code}`.
+- Prefer extending label values over creating near-duplicate metric names.
+
+## Logging format
+
+- Scenario logs should stay JSON and include:
+  - `scenarioType`
+  - `scenarioId`
+  - `duration`
+  - `error` (string or `null`)
+- Error paths should log with `level: "error"` and explicit message text.
+
+## Sentry
+
+- Capture `system_error` exceptions via `@sentry/node`.
+- Keep DSN in env (`SENTRY_DSN`) only. Never hardcode secrets.
+- Include useful tags/extra fields (`scenarioType`, `scenarioId`, `duration`).

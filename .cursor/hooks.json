@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "hooks": {
+    "beforeShellExecution": [
+      {
+        "command": "bash -lc 'if [ -x .cursor/hooks/signal-lab-guard.sh ]; then .cursor/hooks/signal-lab-guard.sh; else ./hooks/signal-lab-guard.sh; fi'",
+        "matcher": "^git commit",
+        "failClosed": true
+      }
+    ]
+  }
+}
